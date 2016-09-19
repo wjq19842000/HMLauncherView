@@ -52,4 +52,7 @@
 
 - (NSUInteger) pageCount;
 
+// WJQ start
+- (void)removeAllData;
+// WJQ end
 @end

@@ -19,7 +19,10 @@
 static const CGFloat kShakeRadians = 3.0f;
 static const NSTimeInterval kShakeTime = 0.15;
 static const CGFloat kScrollingFraction = 0.25f;
-static const NSTimeInterval kScrollTimerInterval = 0.7;
+// WJQ start
+// static const NSTimeInterval kScrollTimerInterval = 0.7;
+static const NSTimeInterval kScrollTimerInterval = 0.5;
+// WJQ end
 static const CGFloat kLongPressDuration = 0.3;
 
 
@@ -99,6 +102,11 @@ static const CGFloat kLongPressDuration = 0.3;
     self.targetPath = nil;
     NSUInteger numberOfPages = [self.dataSource numberOfPagesInLauncherView:self];
     [self.pageControl setNumberOfPages:numberOfPages];
+    
+    // WJQ start
+    self.pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
+    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    // WJQ end
     
     // Remove all previous stuff from ScrollView;
     [[self.scrollView subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -368,8 +376,10 @@ static const CGFloat kLongPressDuration = 0.3;
     CGPoint currentIconPositionInTarget = [launcherView.scrollView convertPoint:icon.center 
                                                                        fromView:icon.superview];
     
-    NSIndexPath *indexPath = [launcherView iconIndexForPoint:currentIconPositionInTarget];   
-    
+    NSIndexPath *indexPath = [launcherView iconIndexForPoint:currentIconPositionInTarget];
+    // WJQ start
+    // NSLog(@"%ld-->%ld", previousIndexPath.row, indexPath.row);
+    // WJQ end
     if (![previousIndexPath isEqual:indexPath]) {
         if ([self.delegate respondsToSelector:@selector(launcherView:willMoveIcon:fromIndex:toIndex:)]) {
             [self.delegate launcherView:self willMoveIcon:icon fromIndex:previousIndexPath toIndex:indexPath];
@@ -602,7 +612,21 @@ static const CGFloat kLongPressDuration = 0.3;
     NSUInteger maxRows = [self.dataSource numberOfRowsInLauncherView:self];
     
     NSUInteger currentPageIndex = [self pageIndexForPoint:center];
-    NSUInteger currentColumnIndex = centerOutsideScrollView.x / iconSize.width;
+    // WJQ start
+    // NSUInteger currentColumnIndex = centerOutsideScrollView.x / iconSize.width;
+    // NSLog(@"%f", centerOutsideScrollView.x);
+    NSUInteger currentColumnIndex;
+    if (centerOutsideScrollView.x < iconSize.width/2) {
+        currentColumnIndex = 0;
+    }
+    else if (centerOutsideScrollView.x > self.scrollView.bounds.size.width - iconSize.width/2) {
+        currentColumnIndex = maxColumns - 1;
+    }
+    else {
+        float spaceWidth = (self.scrollView.bounds.size.width - iconSize.width) / (maxColumns - 1);
+        currentColumnIndex = 1 + (centerOutsideScrollView.x - iconSize.width/2) / spaceWidth;
+    }
+    // WJQ end
     NSUInteger currentRowIndex = (center.y / iconSize.height); 
     
     if (currentRowIndex >= maxRows) {

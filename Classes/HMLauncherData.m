@@ -165,5 +165,9 @@
     return self;
 }
 
-
+// WJQ start
+- (void)removeAllData {
+    _launcherIconPages = [NSMutableArray arrayWithCapacity:10];
+}
+// WJQ end
 @end
