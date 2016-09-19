@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/heikomaass/HMLauncherView"
   s.license          = 'Apache 2.0'
   s.author           = { "Heiko Maaß" => "mail@heikomaass.de" }
-  s.source           = { :git => "https://github.com/heikomaass/HMLauncherView.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/wjq19842000/HMLauncherView.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '6.1'
   s.requires_arc = true
